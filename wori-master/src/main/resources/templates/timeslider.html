@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Optima</title>
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css" rel="stylesheet">
+    <script src="/js/header.js" defer></script>
+
+    <style>
+        /* 슬라이더 컨테이너 */
+        .container {
+            width: 70%; /* 슬라이더 길이 조정 (70%로 축소) */
+            margin: 20px auto;
+        }
+
+        /* 슬라이더 바 */
+        #predictSlider1, #predictSlider2 {
+            width: 80%; /* 컨테이너의 80% 너비 */
+            height: 10px; /* 슬라이더의 높이를 조금 줄임 */
+        }
+
+        /* 슬라이더 눈금 크기 조정 */
+        .noUi-pips {
+            font-size: 0.8em; /* 눈금 크기 줄임 */
+        }
+
+        /* 선택된 시간 텍스트 크기 */
+        .time-label {
+            font-size: 1em;
+        }
+    </style>
+</head>
+
+<body>
+<!-- 중략: 헤더, 로그인 섹션 및 기타 HTML 코드 -->
+
+<form th:action="@{/create}" method="post" class="form-container">
+    <!-- 폼 필드들 -->
+    <div class="form-group">
+        <label class="question-icon">작업 유형을 선택해주세요</label>
+        <div class="task-type-preference">
+            <div class="task-option" data-task="회의">회의</div>
+            <div class="task-option" data-task="학습">학습</div>
+            <div class="task-option" data-task="운동">운동</div>
+            <div class="task-option" data-task="보고서 작성">보고서 작성</div>
+            <div class="task-option" data-task="가사일">가사일</div>
+            <div class="task-option" data-task="창의적인 작업">창의적인 작업</div>
+        </div>
+        <input type="hidden" id="taskType" name="taskType" required>
+    </div>
+
+    <div class="form-group">
+        <label class="question-icon">스케줄명을 적어주세요</label>
+        <input type="text" id="name" name="name" autocomplete="off" required>
+    </div>
+
+    <!-- 두 개의 슬라이더 추가 -->
+    <div class="form-group">
+        <label class="question-icon">예상 소요시간을 선택해주세요</label>
+        <div class="container">
+            <!-- 첫 번째 슬라이더 -->
+            <div id="predictSlider1"></div>
+            <p class="time-label">첫 번째 선택된 시간: <span id="timeValue1">0</span> 분</p>
+
+            <!-- 두 번째 슬라이더 -->
+            <div id="predictSlider2"></div>
+            <p class="time-label">두 번째 선택된 시간: <span id="timeValue2">0</span> 분</p>
+
+            <!-- 총 선택된 시간 -->
+            <p class="time-label">총 선택된 시간: <span id="totalTimeValue">0</span> 분</p>
+        </div>
+
+        <input type="hidden" id="estimatedTime1" name="estimatedTime1" required>
+        <input type="hidden" id="estimatedTime2" name="estimatedTime2" required>
+        <input type="hidden" id="totalEstimatedTime" name="totalEstimatedTime" required>
+    </div>
+
+    <!-- 제출 버튼 -->
+    <div>
+        <button type="submit" class="center-submit">제출</button>
+    </div>
+</form>
+
+<!-- JavaScript 파일 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
+
+<script>
+    // 첫 번째 슬라이더 설정
+    var predictSlider1 = document.getElementById('predictSlider1');
+    noUiSlider.create(predictSlider1, {
+        start: 0,
+        connect: [true, false],
+        range: {
+            'min': 0,
+            'max': 120
+        },
+        step: 1,
+        tooltips: true,
+        format: {
+            to: function (value) {
+                return Math.round(value) + '분';
+            },
+            from: function (value) {
+                return Number(value.replace('분', ''));
+            }
+        },
+        pips: {
+            mode: 'values',
+            values: [30, 60, 90, 120],
+            density: 4
+        }
+    });
+
+    // 두 번째 슬라이더 설정
+    var predictSlider2 = document.getElementById('predictSlider2');
+    noUiSlider.create(predictSlider2, {
+        start: 0,
+        connect: [true, false],
+        range: {
+            'min': 0,
+            'max': 120
+        },
+        step: 1,
+        tooltips: true,
+        format: {
+            to: function (value) {
+                return Math.round(value) + '분';
+            },
+            from: function (value) {
+                return Number(value.replace('분', ''));
+            }
+        },
+        pips: {
+            mode: 'values',
+            values: [30, 60, 90, 120],
+            density: 4
+        }
+    });
+
+    // 슬라이더 값이 변경될 때마다 선택된 시간을 업데이트
+    predictSlider1.noUiSlider.on('update', function (values, handle) {
+        document.getElementById('timeValue1').textContent = values[handle];
+        document.getElementById('estimatedTime1').value = values[handle].replace('분', '');
+
+        // 총 시간 업데이트
+        updateTotalTime();
+    });
+
+    predictSlider2.noUiSlider.on('update', function (values, handle) {
+        document.getElementById('timeValue2').textContent = values[handle];
+        document.getElementById('estimatedTime2').value = values[handle].replace('분', '');
+
+        // 총 시간 업데이트
+        updateTotalTime();
+    });
+
+    // 총 선택된 시간 업데이트
+    function updateTotalTime() {
+        var time1 = Number(document.getElementById('estimatedTime1').value) || 0;
+        var time2 = Number(document.getElementById('estimatedTime2').value) || 0;
+        var totalTime = time1 + time2;
+
+        document.getElementById('totalTimeValue').textContent = totalTime + '분';
+        document.getElementById('totalEstimatedTime').value = totalTime; // 총 시간 값
+    }
+</script>
+
+</body>
+</html>

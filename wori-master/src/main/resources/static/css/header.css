@@ -1,0 +1,98 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #3c5c81, #1a2b3c); /* 그라데이션 배경 */
+    background-size: cover;
+    color: white;
+    margin: 0;
+    padding-left: 250px; /* 왼쪽에 메뉴 공간 확보 */
+    min-height: 100vh;
+}
+
+/* 햄버거 메뉴 스타일 */
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 중앙 정렬 */
+    width: 250px; /* 사이드바 너비 */
+    height: 100vh;
+    padding: 20px;
+    background: #1a2b3c; /* 헤더 배경색 */
+    position: fixed;
+    top: 0;
+    left: -250px; /* 기본으로 숨기기 */
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+/* 햄버거 버튼 스타일 */
+.hamburger {
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001; /* 햄버거 메뉴를 위에 표시 */
+}
+
+/* 헤더가 표시될 때 */
+.header.show {
+    left: 0;
+}
+
+/* 헤더 제목 */
+.header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    margin: 0 0 20px 0; /* 제목 아래쪽에 20px 마진 추가 */
+    color: white;
+}
+
+/* 메뉴 스타일 */
+.menu {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    margin: 0; /* 메뉴 간격 초기화 */
+    padding: 0;
+    width: 100%; /* 메뉴 폭을 헤더 폭에 맞춤 */
+}
+
+.menu li {
+    margin-top: 20px; /* 각 메뉴 아이템 간격 */
+    width: 100%; /* 메뉴 아이템 폭을 전체로 */
+}
+
+/* 메뉴 아이템 스타일 */
+.menu li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px; /* 패딩 추가로 클릭 영역 확대 */
+    display: block; /* 링크를 블록으로 설정하여 전체 영역 클릭 가능하게 */
+    border-radius: 5px; /* 모서리 둥글게 */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* 메뉴 아이템 호버 스타일 */
+.menu li a:hover {
+    background: rgba(0, 217, 255, 0.2); /* 호버 시 배경색 변화 */
+    color: #00d9ff; /* 호버 시 글자색 변화 */
+}
+
+/* 로그아웃 버튼 스타일 */
+#headerLogout {
+    margin-top: auto; /* 아래쪽으로 이동 */
+    padding: 10px 20px;
+    background: #ff4d4d; /* 로그아웃 버튼 배경색 */
+    color: white; /* 글자색 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* 로그아웃 버튼 호버 스타일 */
+#headerLogout:hover {
+    background: #ff1a1a; /* 호버 시 배경색 변화 */
+}

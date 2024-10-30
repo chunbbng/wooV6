@@ -1,0 +1,132 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background:
+            linear-gradient(to bottom, #e9eaf4 860px, #29435f 300px), /* 전환 지점을 300px로 고정 */
+            #29435f; /* 하단 배경색을 지정 */
+    background-size: cover; /* 배경이 화면을 완전히 덮도록 설정 */
+    color: white;
+    margin: 0;
+    padding-top: 120px; /* 헤더 높이 + 여백을 반영하여 패딩 추가 */
+    min-height: 100vh; /* 화면 전체 높이를 최소로 설정 */
+}
+
+/* 헤더 스타일 */
+.header {
+    display: flex;
+    align-items: center;
+    width: 100%; /* 화면 크기에 맞게 조정 */
+    padding: 20px 50px;
+    background: #1a2b3c;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header-cabinet {
+    display: flex;
+    align-items: center;
+    width: 100%; /* 화면 크기에 맞게 조정 */
+    padding: 20px 50px;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header h1 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px; /* 텍스트 크기를 이미지와 동일하게 조정 */
+    letter-spacing: 2px;
+    margin: 0;
+    color: white;
+}
+
+/* 메뉴 스타일 */
+.spacer {
+    flex-grow: 0.8; /* 이 값을 조정하여 h1과 메뉴 사이의 간격을 조정 */
+}
+
+.menu {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    margin-left: 55px; /* 메뉴 간의 간격을 조정 */
+    position: relative; /* ::before 요소를 메뉴 항목과 함께 위치시키기 위해 필요 */
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #ffffff; /* 텍스트 색상을 이미지에 맞게 설정 */
+    font-size: 30px; /* 글자 크기를 이미지와 동일하게 조정 */
+    transition: color 0.3s ease;
+    position: relative;
+    display: inline-block;
+    padding-left: 30px; /* 텍스트와 화살표 간의 간격을 조정 */
+}
+
+.menu li a::before {
+    content: "▶"; /* 원하는 모양으로 화살표를 추가합니다 */
+    position: absolute;
+    left: 0; /* 텍스트의 왼쪽에 화살표를 배치 */
+    color: #00d9ff; /* 화살표 색상 */
+    font-size: 20px; /* 화살표 크기 */
+    transition: color 0.3s ease; /* 색상이 부드럽게 변하도록 설정 */
+}
+
+.menu li a:hover,
+.menu li a:hover::before {
+    color: #00d9ff; /* 텍스트 및 화살표의 색상을 호버 시 변경 */
+}
+
+
+
+/* 가운데 텍스트 스타일 */
+.centered-text {
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+    margin-left: 130px; /* 왼쪽으로 여백 추가 */
+    margin-top: 180px; /* 상단에서 충분한 공간 확보 */
+    font-size: 30px; /* 글자 크기 키우기 */
+    line-height: 1.5; /* 줄 간격 조절 */
+    color: #153753; /* 텍스트 색상을 노란색으로 변경 */
+}
+
+
+
+/* 로그인 버튼 호버 스타일 */
+.login-button:hover {
+    background: linear-gradient(45deg, #519fc7, #f2f2f1); /* 호버 시 배경색 변화 */
+    color: white; /* 호버 시 텍스트 색상을 흰색으로 변경 */
+}
+
+
+.centered-text_calendar {
+    text-align: center;
+}
+
+.header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+.header h1 a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+/* 헤더 숨김 시 */
+.header.hidden {
+    transform: translateY(-100%); /* 헤더가 위로 사라지도록 */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* 헤더가 다시 나타날 때 */
+.header {
+    transform: translateY(0);
+    transition: transform 0.3s ease-in-out;
+}

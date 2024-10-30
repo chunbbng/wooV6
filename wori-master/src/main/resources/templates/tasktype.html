@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>작업 유형 선택</title>
+    <style>
+        .task-type-preference {
+            display: grid;
+            grid-template-columns: repeat(3, 200px); /* 각 열의 너비를 200px로 고정 */
+            grid-gap: 30px 10px; /* 행 간격 30px, 열 간격 10px */
+            justify-items: center; /* 각 열을 중앙에 정렬 */
+            align-items: center; /* 세로로 중앙 정렬 */
+            margin-top: 50px;
+        }
+
+        .task-option {
+            width: 150px;
+            height: 170px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .task-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 이미지가 잘리지 않도록 유지 */
+        }
+
+        /* 마우스 호버 시 살짝 확대 */
+        .task-option:hover {
+            transform: scale(1.05);
+        }
+
+        /* 선택된 항목에 테두리 추가 */
+        .task-option.selected img {
+            border: 3px solid #4CAF50;
+        }
+
+        /* 각 항목의 개별 배치 조정 */
+
+        /* 회의 */
+        .option-1 {
+            grid-column: 1; /* 첫 번째 열에 위치 */
+            grid-row: 1;    /* 첫 번째 행에 위치 */
+            margin-top: 10px;  /* 위쪽 여백 */
+            margin-bottom: -90px; /* 아래쪽 여백 */
+            margin-left: 15px;  /* 왼쪽 여백 */
+            margin-right: -40px;  /* 오른쪽 여백 */
+        }
+
+        /* 학습 */
+        .option-2 {
+            grid-column: 2; /* 두 번째 열에 위치 */
+            grid-row: 1;    /* 첫 번째 행에 위치 */
+            margin-top: 0px;  /* 위쪽 여백 */
+            margin-bottom: 60px; /* 아래쪽 여백 */
+            margin-left: 10px;  /* 왼쪽 여백 */
+            margin-right: 10px; /* 오른쪽 여백 */
+        }
+
+        /* 운동 */
+        .option-3 {
+            grid-column: 3; /* 세 번째 열에 위치 */
+            grid-row: 1;    /* 첫 번째 행에 위치 */
+            margin-top: 20px;  /* 위쪽 여백 */
+            margin-bottom: -90px; /* 아래쪽 여백 */
+            margin-left: -40px;  /* 왼쪽 여백 */
+            margin-right: 15px; /* 오른쪽 여백 */
+        }
+
+        /* 보고서 작성 */
+        .option-4 {
+            grid-column: 1; /* 첫 번째 열에 위치 */
+            grid-row: 2;    /* 두 번째 행에 위치 */
+            margin-top: 10px; /* 위쪽 여백 */
+            margin-bottom: 10px; /* 아래쪽 여백 */
+            margin-left: 10px;  /* 왼쪽 여백 */
+            margin-right: -40px;  /* 오른쪽 여백 */
+        }
+
+        /* 가사일 */
+        .option-5 {
+            grid-column: 2; /* 두 번째 열에 위치 */
+            grid-row: 2;    /* 두 번째 행에 위치 */
+            margin-top: 15px;  /* 위쪽 여백 */
+            margin-bottom: -140px; /* 아래쪽 여백 */
+            margin-left: 10px;  /* 왼쪽 여백 */
+            margin-right: 10px; /* 오른쪽 여백 */
+        }
+
+        /* 창의적인 작업 */
+        .option-6 {
+            grid-column: 3; /* 세 번째 열에 위치 */
+            grid-row: 2;    /* 두 번째 행에 위치 */
+            margin-top: 10px; /* 위쪽 여백 */
+            margin-bottom: 10px; /* 아래쪽 여백 */
+            margin-left: -40px;  /* 왼쪽 여백 */
+            margin-right: 15px; /* 오른쪽 여백 */
+        }
+    </style>
+</head>
+<body>
+
+<form th:action="@{/create}" method="post" class="form-container">
+    <div class="form-group">
+        <label class="question-icon">작업 유형을 선택해주세요</label>
+        <div class="task-type-preference">
+            <!-- 각 항목의 위치를 개별적으로 조정 (주석에 해당 작업 유형 명시) -->
+
+            <!-- 회의 -->
+            <div class="task-option option-1" data-task="회의">
+                <img src="/static/image/Meeting.png" alt="회의">
+            </div>
+
+            <!-- 학습 -->
+            <div class="task-option option-2" data-task="학습">
+                <img src="/static/image/Study.png" alt="학습">
+            </div>
+
+            <!-- 운동 -->
+            <div class="task-option option-3" data-task="운동">
+                <img src="/static/image/Exercise.png" alt="운동">
+            </div>
+
+            <!-- 보고서 작성 -->
+            <div class="task-option option-4" data-task="보고서 작성">
+                <img src="/static/image/Report.png" alt="보고서 작성">
+            </div>
+
+            <!-- 가사일 -->
+            <div class="task-option option-5" data-task="가사일">
+                <img src="/static/image/Housework.png" alt="가사일">
+            </div>
+
+            <!-- 창의적인 작업 -->
+            <div class="task-option option-6" data-task="창의적인 작업">
+                <img src="/static/image/Creative.png" alt="창의적인 작업">
+            </div>
+        </div>
+        <input type="hidden" id="taskType" name="taskType" required>
+    </div>
+</form>
+
+<script>
+    const options = document.querySelectorAll('.task-option');
+
+    options.forEach(opt => {
+        opt.addEventListener('click', function() {
+            options.forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+            document.getElementById('taskType').value = this.getAttribute('data-task');
+        });
+    });
+</script>
+
+</body>
+</html>
