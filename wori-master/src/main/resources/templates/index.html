@@ -155,6 +155,11 @@
 <script src="/js/auth.js"></script>
 
 <script>
+    function hideSignupButton() {
+        // 회원가입 버튼 숨기기
+        document.getElementById("signupButton").style.display = "none";
+        // 필요하다면 추가적인 동작도 여기서 수행 가능
+    }
     function toggleMenu() {
         const header = document.querySelector('.header');
         header.classList.toggle('show');

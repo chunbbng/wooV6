@@ -39,7 +39,39 @@
         <p id="resultTime" style="display:none;">"<span th:text="${adjustTime}"></span>" 분 입니다.</p>
     </div>
 
+
+
     <form id="scheduleForm" th:action="@{/result_ts/{id}(id=${schedule.id})}" method="post" class="hidden">
+        <div class="info-container" style="text-align: center; position: relative;">
+            <!-- ! 아이콘 -->
+            <div class="info-icon"
+                 onmouseover="showTooltip(this)"
+                 onmouseout="hideTooltip(this)"
+                 style="display:inline-block; width:30px; height:30px; background-color:yellow; border-radius:50%; text-align:center; font-weight:bold; font-size:24px; line-height:30px; cursor:pointer;">
+                !
+            </div>
+            <span style="margin-left: 10px;">어떻게 예상시간이 나오게 되었나요?</span>
+
+            <!-- 툴팁 -->
+            <div class="tooltip" style="display:none; opacity: 0; position:absolute; top:60px; left:50%; transform:translateX(-50%) translateY(-10px); background-color: #fff; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 1000; width: 550px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); transition: opacity 0.3s ease, transform 0.3s ease;">
+                <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                    <div style="margin-right: 20px; text-align: center;">
+                        <br>
+                        <span style="font-weight: bold; display: block; margin-bottom: 5px;">가장 많은 영향을 끼친 항목은 <span id="highImpact" style="font-weight: bold; background-color: #ffeeba; padding: 2px 5px; border-radius: 3px;"></span> 입니다.</span><br><br>
+                        <span style="font-weight: bold; display: block;">가장 적은 영향을 끼친 항목은 <span id="lowImpact" style="font-weight: bold; background-color: #ffeeba; padding: 2px 5px; border-radius: 3px;"></span> 입니다.</span>
+                    </div>
+
+                    <!-- 수치 정보를 세로로 배치하는 컨테이너 -->
+                    <div style="background-color: #f0f8ff; border: 1px solid #ccc; border-radius: 5px; padding: 10px; text-align: left;">
+                        <strong>수치 정보</strong><br>
+                        <div>스트레스: <span th:text="${schedule.stress}"></span></div>
+                        <div>중요도: <span th:text="${schedule.importance}"></span></div>
+                        <div>난이도: <span th:text="${schedule.difficulty}"></span></div>
+                        <div>긴급도: <span th:text="${schedule.urgency}"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-group" style="text-align: center;">
             <label class="question-icon">원하는 휴식시간 정도?</label>
             <div class="rest-time-preference" style="text-align: center;">
@@ -67,44 +99,6 @@
             <button type="button" id="selectDateButton">제출하기</button>
         </div>
     </form>
-</div>
-
-<div class="info-container" style="text-align: center; position: relative;">
-    <!-- ! 아이콘 -->
-    <div class="info-icon"
-         onmouseover="showTooltip(this)"
-         onmouseout="hideTooltip(this)"
-         style="display:inline-block; width:30px; height:30px; background-color:yellow; border-radius:50%; text-align:center; font-weight:bold; font-size:24px; line-height:30px; cursor:pointer;">
-        !
-    </div>
-    <span style="margin-left: 10px;">어떻게 예상시간이 나오게 되었나요?</span>
-
-    <!-- 툴팁 -->
-    <div class="tooltip" style="display:none; opacity: 0; position:absolute; top:60px; left:50%; transform:translateX(-50%) translateY(-10px); background-color: #fff; border: 1px solid #ccc; border-radius: 5px; padding: 10px; z-index: 1000; width: 550px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); transition: opacity 0.3s ease, transform 0.3s ease;">
-        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
-            <div style="margin-right: 20px; text-align: center;">
-                <br>
-                <span style="font-weight: bold; display: block; margin-bottom: 5px;">가장 많은 영향을 끼친 항목은 <span id="highImpact" style="font-weight: bold; background-color: #ffeeba; padding: 2px 5px; border-radius: 3px;"></span> 입니다.</span><br><br>
-                <span style="font-weight: bold; display: block;">가장 적은 영향을 끼친 항목은 <span id="lowImpact" style="font-weight: bold; background-color: #ffeeba; padding: 2px 5px; border-radius: 3px;"></span> 입니다.</span>
-            </div>
-
-            <!-- 수치 정보를 세로로 배치하는 컨테이너 -->
-            <div style="background-color: #f0f8ff; border: 1px solid #ccc; border-radius: 5px; padding: 10px; text-align: left;">
-                <strong>수치 정보</strong><br>
-                <div>스트레스: <span th:text="${schedule.stress}"></span></div>
-                <div>중요도: <span th:text="${schedule.importance}"></span></div>
-                <div>난이도: <span th:text="${schedule.difficulty}"></span></div>
-                <div>긴급도: <span th:text="${schedule.urgency}"></span></div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-</div>
-
-
 </div>
 
 <script th:inline="javascript">
