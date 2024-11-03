@@ -1,8 +1,10 @@
 package team.woo.algorithm;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 public class WeightHistory {
 
     @Id

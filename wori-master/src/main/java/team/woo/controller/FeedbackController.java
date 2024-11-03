@@ -8,22 +8,22 @@ import team.woo.algorithm.FeedbackService;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/task")  // 수정된 기본 경로
+@RequestMapping("/api/task")
 public class FeedbackController {
 
     @Autowired
     private FeedbackService feedbackService;
 
-    // 대안 경로: /api/task/{taskTypeName}/feedback
     @PostMapping("/{taskTypeName}/feedback")
-    public ResponseEntity<String> submitFeedback(
+    public ResponseEntity<Map<String, Map<String, Double>>> submitFeedback(
             @PathVariable String taskTypeName,
             @RequestBody Map<String, Object> feedbackData) {
 
         double feedbackSum = ((Number) feedbackData.get("feedbackSum")).doubleValue();
+        Map<String, Map<String, Double>> differences = feedbackService.processFeedback(feedbackSum, taskTypeName);
 
-        feedbackService.processFeedback(feedbackSum, taskTypeName);
-
-        return ResponseEntity.ok("가중치가 성공적으로 업데이트되었습니다.");
+        return ResponseEntity.ok(differences);
     }
 }
+
+

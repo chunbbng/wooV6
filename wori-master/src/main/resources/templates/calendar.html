@@ -33,8 +33,6 @@
 </head>
 <body>
 
-<div class="hamburger" onclick="toggleMenu()">☰</div>
-
 <!-- 헤더 섹션 추가 -->
 <div class="header">
     <h1>
@@ -128,11 +126,6 @@
         // 캘린더 렌더링
         calendar.render();
     });
-
-    function toggleMenu() {
-        const header = document.querySelector('.header');
-        header.classList.toggle('show');
-    }
 </script>
 <script src="/js/auth.js"></script> <!-- auth.js 추가 -->
 </body>

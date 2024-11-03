@@ -20,27 +20,25 @@
             font-size: 36px;
         }
 
-        /* 가로로 taskType을 배치하는 컨테이너 */
         .schedule-container {
             display: flex;
-            justify-content: space-around; /* 가로로 taskType들을 균등하게 배치 */
-            width: 100%; /* 전체 가로 폭을 차지 */
+            justify-content: space-around;
+            width: 100%;
             padding: 20px;
             box-sizing: border-box;
         }
 
-        /* taskType 별로 하나의 열 */
         .task-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1; /* 각 taskType의 열이 동일한 너비를 가짐 */
+            flex: 1;
             padding: 10px;
-            border-right: 1px dashed #ccc; /* taskType을 구분하는 선 */
+            border-right: 1px dashed #ccc;
         }
 
         .task-group:last-child {
-            border-right: none; /* 마지막 taskType은 구분선 없음 */
+            border-right: none;
         }
 
         .task-group h2 {
@@ -49,13 +47,11 @@
             margin-bottom: 20px;
         }
 
-        /* 각 스케줄을 세로로 가운데 정렬 */
         .schedule-item {
             margin-bottom: 10px;
             text-align: center;
         }
 
-        /* 버튼을 세로로 정렬 */
         .button-group {
             display: flex;
             justify-content: center;
@@ -108,18 +104,46 @@
             color: red;
         }
 
-        .button-group button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .difference-message {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .difference-message-label {
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        .difference-values {
+            display: flex;
+            gap: 20px;
+            flex: 2;
+            justify-content: flex-end;
+        }
+
+        .difference-value {
+            font-size: 16px;
+            color: #555;
+            text-align: right;
+        }
+
+        .highlight {
+            color: #007BFF;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-<div class="hamburger" onclick="toggleMenu()">☰</div>
-
-<!-- 헤더 부분은 유지 -->
 <div th:fragment="header">
     <div class="header">
         <h1>
@@ -134,13 +158,14 @@
         </ul>
     </div>
 </div>
+<div id="headerLogout" class="logout-button">로그아웃</div>
 
 <h1>스케줄 목록</h1>
 
 <div class="schedule-container" id="schedule-container"></div>
 
 <script th:inline="javascript">
-    const schedules = [[${schedules}]];
+    const schedules = /*[[${schedules}]]*/ [];
 
     const taskGroups = schedules.reduce((groups, schedule) => {
         if (!groups[schedule.taskTypeName]) {
@@ -159,7 +184,7 @@
 
         let totalSchedules = group.length;
         let selectedCount = 0;
-        let feedbackSum = 0; // 피드백 합계 변수 (변경됨)
+        let feedbackSum = 0;
 
         group.forEach(schedule => {
             const scheduleDiv = document.createElement('div');
@@ -182,25 +207,25 @@
             buttons.forEach(button => {
                 button.onclick = () => {
                     if (selectedValue === null) {
-                        selectedValue = parseFloat(button.value); // 피드백 값을 실수형으로 변환
+                        selectedValue = parseFloat(button.value);
                         button.style.backgroundColor = 'red';
                         button.disabled = true;
                         selectedCount++;
-                        feedbackSum += selectedValue; // 피드백 값 추가 (변경됨)
+                        feedbackSum += selectedValue;
                     } else {
                         buttons.forEach(btn => {
                             if (parseFloat(btn.value) === selectedValue) {
                                 btn.style.backgroundColor = '';
                                 btn.disabled = false;
                                 selectedCount--;
-                                feedbackSum -= selectedValue; // 피드백 값 제거 (변경됨)
+                                feedbackSum -= selectedValue;
                             }
                         });
                         selectedValue = parseFloat(button.value);
                         button.style.backgroundColor = 'red';
                         button.disabled = true;
                         selectedCount++;
-                        feedbackSum += selectedValue; // 피드백 값 추가 (변경됨)
+                        feedbackSum += selectedValue;
                     }
                     console.log(`현재 피드백 합계: ${feedbackSum}`);
                 };
@@ -213,7 +238,15 @@
         improvementButton.className = "improvement-button";
         improvementButton.innerText = "개선하기";
         improvementButton.onclick = () => {
-            const existingMessage = groupDiv.querySelector('.improvement-message');
+
+            improvementButton.onclick = () => {
+                improvementButton.disabled = true; // 버튼 비활성화
+                setTimeout(() => {
+                    improvementButton.disabled = false; // 1분 후 버튼 재활성화
+                }, 1000); // 60000 밀리초 = 1분
+            }
+
+                const existingMessage = groupDiv.querySelector('.improvement-message');
             if (existingMessage) {
                 existingMessage.remove();
             }
@@ -233,16 +266,31 @@
                 messageDiv.innerText = "개선에 참여해주셔서 감사합니다!";
                 console.log(`보낼 피드백 합계: ${feedbackSum}`);
 
-                // 합계를 서버로 전송하여 가중치를 업데이트
                 fetch(`/api/task/${taskTypeName}/feedback`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ feedbackSum: feedbackSum })
-                }).then(response => response.json())
-                    .then(data => {
-                        console.log('성공적으로 전송되었습니다:', data);
+                })
+                    .then(response => response.json())
+                    .then(differences => {
+                        console.log('가중치 변화량:', differences);
+
+                        Object.entries(differences).forEach(([key, values]) => {
+                            const diffMessage = document.createElement('div');
+                            diffMessage.classList.add('difference-message');
+
+                            diffMessage.innerHTML = `
+                                <div class="difference-message-label">${key}</div>
+                                <div class="difference-values">
+                                    <div class="difference-value">현재: <span class="highlight">${values.current.toFixed(2)}</span></div>
+                                    <div class="difference-value">이전: <span class="highlight">${values.previous.toFixed(2)}</span></div>
+                                    <div class="difference-value">차이(약): <span class="highlight">${values.difference.toFixed(2)}</span></div>
+                                </div>
+                            `;
+                            groupDiv.appendChild(diffMessage);
+                        });
                     })
                     .catch((error) => {
                         console.error('전송 중 오류 발생:', error);
@@ -254,17 +302,7 @@
         };
 
         groupDiv.appendChild(improvementButton);
-
-        const divider = document.createElement('div');
-        divider.classList.add('divider');
-        groupDiv.appendChild(divider);
-
         scheduleContainer.appendChild(groupDiv);
-    }
-
-    function toggleMenu() {
-        const header = document.querySelector('.header');
-        header.classList.toggle('show');
     }
 </script>
 

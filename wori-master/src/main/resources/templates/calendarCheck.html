@@ -67,8 +67,6 @@
 </head>
 <body>
 
-<div class="hamburger" onclick="toggleMenu()">☰</div>
-
 <div class="header">
     <h1>
         <a th:href="@{/}" style="color: white; text-decoration: none;">Plan Optima</a>
@@ -239,11 +237,6 @@
                 });
         });
     });
-
-    function toggleMenu() {
-        const header = document.querySelector('.header');
-        header.classList.toggle('show');
-    }
 </script>
 
 </body>

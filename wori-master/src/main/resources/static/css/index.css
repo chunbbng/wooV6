@@ -517,7 +517,7 @@ button.center-submit:hover {
     height: 280px; /* 내부 내용에 맞춰 높이 자동 설정 */
     position: absolute;
     top: 79%; /* 화면의 중앙에 배치 */
-    left: 14%; /* 가로 중앙에 배치 */
+    left: 28%; /* 가로 중앙에 배치 */
     transform: translate(-50%, -50%); /* 정확하게 중앙에 맞추기 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

@@ -4,6 +4,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class FeedbackService {
 
@@ -11,35 +15,54 @@ public class FeedbackService {
     private TaskTypeRepository taskTypeRepository;
 
     @Transactional
-    public void processFeedback(double feedbackSum, String taskTypeName) {
-        // TaskType 가져오기
+    public Map<String, Map<String, Double>> processFeedback(double feedbackSum, String taskTypeName) {
         TaskType taskType = taskTypeRepository.findByName(taskTypeName)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task type: " + taskTypeName));
 
         Weight weight = taskType.getWeight();
 
-        // WeightHistory에 기존 가중치 기록 (변경되기 전에)
         int updateCount = taskType.getWeightHistories().size() + 1;
         WeightHistory weightHistory = new WeightHistory(weight, taskType, updateCount);
         taskType.addWeightHistory(weightHistory);
 
-        // 가중치 업데이트 로직
-        double baseLearningRate = 0.05;  // 기본 학습률 설정
+        double baseLearningRate = 0.05;
         double weightChange = baseLearningRate * Math.abs(feedbackSum);
 
+        // 변경된 가중치 적용
         if (feedbackSum > 0) {
-            // 시간이 부족한 경우, 긴급도와 난이도 가중치 증가
             weight.setUrgencyWeight(weight.getUrgencyWeight() + weightChange);
             weight.setDifficultyWeight(weight.getDifficultyWeight() + weightChange);
-        }
-
-        else if (feedbackSum < 0) {
-            // 시간이 남은 경우, 스트레스와 중요도 가중치 감소
+        } else if (feedbackSum < 0) {
             weight.setStressWeight(weight.getStressWeight() - weightChange);
             weight.setImportanceWeight(weight.getImportanceWeight() - weightChange);
         }
 
-        // 변경 사항 저장
         taskTypeRepository.save(taskType);
+
+        // 변경 전과 후의 차이 및 값을 반환
+        Map<String, Map<String, Double>> differences = new HashMap<>();
+        WeightHistory lastHistory = taskType.getWeightHistories().stream()
+                .max(Comparator.comparing(WeightHistory::getUpdateCount))
+                .orElse(null);
+
+        if (feedbackSum > 0) {
+            differences.put("urgencyWeight", Map.of("current", weight.getUrgencyWeight(),
+                    "previous", lastHistory.getUrgencyWeight(),
+                    "difference", weight.getUrgencyWeight() - lastHistory.getUrgencyWeight()));
+            differences.put("difficultyWeight", Map.of("current", weight.getDifficultyWeight(),
+                    "previous", lastHistory.getDifficultyWeight(),
+                    "difference", weight.getDifficultyWeight() - lastHistory.getDifficultyWeight()));
+        } else if (feedbackSum < 0) {
+            differences.put("stressWeight", Map.of("current", weight.getStressWeight(),
+                    "previous", lastHistory.getStressWeight(),
+                    "difference", weight.getStressWeight() - lastHistory.getStressWeight()));
+            differences.put("importanceWeight", Map.of("current", weight.getImportanceWeight(),
+                    "previous", lastHistory.getImportanceWeight(),
+                    "difference", weight.getImportanceWeight() - lastHistory.getImportanceWeight()));
+        }
+
+        return differences;
     }
 }
+
+
